@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人主页</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: #0a0e17;
+      color: #e0e6f0;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* 背景光效 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 20%, rgba(0, 180, 255, 0.06) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(120, 0, 255, 0.06) 0%, transparent 50%);
+      animation: bgShift 20s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+
+    @keyframes bgShift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-5%, -5%); }
+    }
+
+    /* 导航栏 */
+    nav {
+      position: fixed;
+      top: 0; width: 100%;
+      padding: 18px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 180, 255, 0.1);
+      z-index: 100;
+    }
+
+    nav .logo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00b4ff, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex; gap: 28px;
+    }
+
+    nav ul li a {
+      color: #8892a4;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+      letter-spacing: 0.5px;
+    }
+
+    nav ul li a:hover {
+      color: #00b4ff;
+    }
+
+    /* 通用容器 */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(180deg, #00b4ff, #7c3aed);
+      border-radius: 2px;
+    }
+
+    /* Hero */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding-top: 80px;
+    }
+
+    .avatar {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      border: 3px solid rgba(0, 180, 255, 0.3);
+      box-shadow: 0 0 40px rgba(0, 180, 255, 0.15);
+      object-fit: cover;
+      margin-bottom: 28px;
+      background: linear-gradient(135deg, #1a2035, #0d1525);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      color: #00b4ff;
+      margin-left: auto; margin-right: auto;
+    }
+
+    .hero-name {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, #00b4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+
+    .hero-tagline {
+      font-size: 1.1rem;
+      color: #6b7a90;
+      margin-bottom: 10px;
+    }
+
+    .hero-tags {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .hero-tags span {
+      padding: 6px 18px;
+      border: 1px solid rgba(0, 180, 255, 0.2);
+      border-radius: 20px;
+      font-size: 0.82rem;
+      color: #5a9fcf;
+      background: rgba(0, 180, 255, 0.04);
+    }
+
+    /* 自我介绍 */
+    #about .intro-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #about .intro-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, #00b4ff, #7c3aed, transparent);
+    }
+
+    #about p {
+      color: #8892a4;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    #about p:last-child { margin-bottom: 0; }
+
+    .highlight {
+      color: #00b4ff;
+      font-weight: 600;
+    }
+
+    /* 兴趣爱好 */
+    #hobbies .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .hobby-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 28px 24px;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+
+    .hobby-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 180, 255, 0.2);
+      box-shadow: 0 12px 40px rgba(0, 180, 255, 0.08);
+    }
+
+    .hobby-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .hobby-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #e0e6f0;
+    }
+
+    .hobby-card p {
+      font-size: 0.85rem;
+      color: #6b7a90;
+    }
+
+    /* 联系方式 */
+    #contact .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .qr-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 28px 20px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+
+    .qr-card:hover {
+      border-color: rgba(0, 180, 255, 0.2);
+    }
+
+    .qr-placeholder {
+      width: 140px; height: 140px;
+      margin: 0 auto 16px;
+      border-radius: 10px;
+      border: 1px dashed rgba(0, 180, 255, 0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      color: #4a5568;
+      background: rgba(0, 180, 255, 0.02);
+    }
+
+    .qr-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #c0c8d8;
+    }
+
+    .qr-card p {
+      font-size: 0.8rem;
+      color: #6b7a90;
+    }
+
+    .contact-links {
+      margin-top: 32px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .contact-links a {
+      color: #5a9fcf;
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 8px 20px;
+      border: 1px solid rgba(0, 180, 255, 0.15);
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .contact-links a:hover {
+      color: #00b4ff;
+      border-color: rgba(0, 180, 255, 0.4);
+      background: rgba(0, 180, 255, 0.06);
+    }
+
+    /* 页脚 */
+    footer {
+      text-align: center;
+      padding: 32px;
+      font-size: 0.8rem;
+      color: #3a4560;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* 淡入动画 */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 响应式 */
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      nav ul { gap: 16px; }
+      .hero-name { font-size: 2rem; }
+      section { padding: 60px 0; }
+      .section-title { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav>
+  <div class="logo">MY HOME</div>
+  <ul>
+    <li><a href="#hero">首页</a></li>
+    <li><a href="#about">关于我</a></li>
+    <li><a href="#hobbies">兴趣</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-name">高泽阳</div>
+    <p class="hero-tagline">保持好奇心的探索者</p>
+    <div class="hero-tags">
+      <span>商洛学院</span>
+      <span>电子信息科学与技术</span>
+      <span>INFJ</span>
+      <span>乒乓</span>
+      <span>羽毛球</span>
+      <span>听音乐</span>
+    </div>
+  </div>
+</section>
+
+<!-- 自我介绍 -->
+<section id="about">
+  <div class="container">
+    <div class="section-title fade-up">关于我</div>
+    <div class="intro-card fade-up">
+      <p>你好！我是<span class="highlight">高泽阳</span>，一名来自<span class="highlight">商洛学院电子信息科学与技术</span>专业的在读大学生。</p>
+      <p>性格类型为 <span class="highlight">INFJ</span>——内敛而富有洞察力，喜欢深度思考与独立探索。对电子技术和信息科学充满好奇，享受从原理到实践的完整过程。</p>
+      <p>在学习之余，我喜欢打乒乓球和羽毛球来放松身心，也热爱在音乐中寻找灵感和宁静。</p>
+      <p>如果你也对技术和生活充满热情，欢迎随时与我交流！</p>
+    </div>
+  </div>
+</section>
+
+<!-- 兴趣爱好 -->
+<section id="hobbies">
+  <div class="container">
+    <div class="section-title fade-up">兴趣爱好</div>
+    <div class="grid">
+      <div class="hobby-card fade-up">
+        <div class="hobby-icon">&#127955;</div>
+        <h3>乒乓球</h3>
+        <p>享受球桌上的快速反应与策略博弈</p>
+      </div>
+      <div class="hobby-card fade-up">
+        <div class="hobby-icon">&#127992;</div>
+        <h3>羽毛球</h3>
+        <p>挥拍之间释放压力，保持运动活力</p>
+      </div>
+      <div class="hobby-card fade-up">
+        <div class="hobby-icon">&#127925;</div>
+        <h3>听音乐</h3>
+        <p>在旋律中放松心情，寻找灵感与宁静</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 联系方式 -->
+<section id="contact">
+  <div class="container">
+    <div class="section-title fade-up">联系方式</div>
+    <div class="qr-grid fade-up">
+      <div class="qr-card">
+        <img src="qrcode.jpg" alt="联系方式二维码" style="width:140px;height:140px;border-radius:10px;object-fit:cover;margin:0 auto 16px;display:block;">
+        <h3>扫码联系我</h3>
+        <p>微信 / QQ</p>
+      </div>
+    </div>
+    <div class="contact-links fade-up">
+      <a href="mailto:2992712519@qq.com">2992712519@qq.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer>
+  &copy; 2026 高泽阳 &middot; 保持好奇心，探索无限可能
+</footer>
+
+<!-- 滚动淡入 -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // 导航平滑滚动
+  document.querySelectorAll('nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      target?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
