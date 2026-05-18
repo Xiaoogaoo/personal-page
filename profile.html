@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人主页</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#0a0e17;color:#e0e6f0;line-height:1.8;overflow-x:hidden}
+    body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(0,180,255,.06) 0%,transparent 50%),radial-gradient(circle at 70% 80%,rgba(120,0,255,.06) 0%,transparent 50%);z-index:-1}
+    .container{max-width:700px;margin:0 auto;padding:0 24px}
+    section{padding:60px 0}
+    .section-title{font-size:1.4rem;font-weight:700;margin-bottom:28px;display:flex;align-items:center;gap:12px}
+    .section-title::before{content:'';display:inline-block;width:4px;height:22px;background:linear-gradient(180deg,#00b4ff,#7c3aed);border-radius:2px}
+    #hero{min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center;padding-top:60px}
+    .hero-avatar{width:110px;height:110px;border-radius:50%;border:3px solid rgba(255,255,255,.15);box-shadow:0 0 40px rgba(0,180,255,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.8rem;font-weight:700;color:#fff}
+    .hero-name{font-size:2.6rem;font-weight:800;background:linear-gradient(135deg,#fff,#00b4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;letter-spacing:2px}
+    .hero-tagline{font-size:1rem;color:#6b7a90}
+    .hero-tags{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:18px}
+    .hero-tags span{padding:5px 16px;border:1px solid rgba(0,180,255,.2);border-radius:20px;font-size:.8rem;color:#5a9fcf;background:rgba(0,180,255,.04)}
+    .intro-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:28px;position:relative;overflow:hidden}
+    .intro-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,#00b4ff,#7c3aed,transparent)}
+    #about p{color:#8892a4;font-size:.92rem;margin-bottom:14px}
+    #about p:last-child{margin-bottom:0}
+    .hl{color:#00b4ff;font-weight:600}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+    .hobby-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:22px 20px;transition:transform .3s,border-color .3s}
+    .hobby-card:hover{transform:translateY(-3px);border-color:rgba(0,180,255,.2)}
+    .hobby-icon{font-size:1.8rem;margin-bottom:10px}
+    .hobby-card h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
+    .hobby-card p{font-size:.82rem;color:#6b7a90}
+    .contact-links{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+    .contact-links a{color:#5a9fcf;text-decoration:none;font-size:.85rem;padding:7px 18px;border:1px solid rgba(0,180,255,.15);border-radius:8px;transition:all .3s}
+    .contact-links a:hover{color:#00b4ff;border-color:rgba(0,180,255,.4);background:rgba(0,180,255,.06)}
+    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .media-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden;transition:transform .3s,border-color .3s}
+    .media-card:hover{transform:translateY(-3px);border-color:rgba(0,180,255,.2)}
+    .media-card img{width:100%;height:180px;object-fit:cover;display:block}
+    .media-card video{width:100%;height:180px;display:block;background:#000}
+    .media-card audio{width:100%;padding:12px;display:block}
+    .media-card .media-body{padding:12px 14px}
+    .media-card .media-body h3{font-size:.9rem;font-weight:600;margin-bottom:4px}
+    .media-card .media-body p{font-size:.78rem;color:#6b7a90}
+    .media-card a{display:block;color:#5a9fcf;text-decoration:none;padding:12px 14px;font-size:.85rem;transition:color .3s}
+    .media-card a:hover{color:#00b4ff}
+    .media-card .link-icon{font-size:1.2rem;margin-right:6px}
+    footer{text-align:center;padding:28px;font-size:.78rem;color:#3a4560;border-top:1px solid rgba(255,255,255,.04)}
+    .error{text-align:center;padding:120px 20px;color:#6b7a90}
+    .error h2{font-size:1.3rem;color:#e0e6f0;margin-bottom:10px}
+    .btn-create{display:inline-block;margin-top:16px;padding:10px 28px;background:linear-gradient(135deg,#00b4ff,#7c3aed);color:#fff;border:none;border-radius:8px;text-decoration:none;font-size:.9rem;cursor:pointer}
+    @media(max-width:600px){.hero-name{font-size:2rem}section{padding:40px 0}.section-title{font-size:1.2rem}.media-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<div id="profile-view"></div>
+<div id="error-view" style="display:none" class="error">
+  <h2>未找到个人资料</h2>
+  <p>链接可能已失效或格式错误</p>
+  <a href="index.html" class="btn-create">创建我的主页</a>
+</div>
+
+<script>
+// 颜色方案
+const COLORS = [
+  ['#00b4ff','#0077cc'],['#7c3aed','#5b21b6'],['#06b6d4','#0e7490'],
+  ['#10b981','#047857'],['#f59e0b','#d97706'],['#ef4444','#b91c1c'],
+  ['#ec4899','#be185d'],['#8b5cf6','#6d28d9']
+];
+
+function getColor(name, custom) {
+  if (custom && custom.startsWith('#') && custom.length >= 4) return [custom, custom];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return COLORS[Math.abs(hash) % COLORS.length];
+}
+
+function decode(url) {
+  try {
+    let s = url.replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4) s += '=';
+    return JSON.parse(decodeURIComponent(escape(atob(s))));
+  } catch { return null; }
+}
+
+function render(data) {
+  const [c1, c2] = getColor(data.name, data.color);
+  const initial = (data.name || '?').charAt(0).toUpperCase();
+
+  // 头像
+  const avatarHtml = `<div class="hero-avatar" style="background:linear-gradient(135deg,${c1},${c2})">${initial}</div>`;
+
+  // 标签
+  const tags = (data.tags || []).filter(Boolean);
+  const tagsHtml = tags.map(t => `<span>${t}</span>`).join('');
+
+  // 关于我
+  const introHtml = data.intro
+    ? `<section id="about"><div class="container">
+        <div class="section-title">关于我</div>
+        <div class="intro-card"><p>${data.intro.replace(/\n/g, '</p><p>')}</p></div>
+      </div></section>` : '';
+
+  // 兴趣爱好
+  const h = data.hobbies || [];
+  const hobbiesHtml = h.map(item => `
+    <div class="hobby-card">
+      <div class="hobby-icon">${item.icon || ''}</div>
+      <h3>${item.name || ''}</h3>
+      <p>${item.desc || ''}</p>
+    </div>
+  `).join('');
+  const hobbiesSection = h.length
+    ? `<section><div class="container"><div class="section-title">兴趣爱好</div><div class="grid">${hobbiesHtml}</div></div></section>` : '';
+
+  // 联系方式
+  const links = (data.links || []).filter(l => l.url);
+  const contactHtml = links.length
+    ? `<section><div class="container">
+        <div class="section-title">联系方式</div>
+        <div class="contact-links">${links.map(l => `<a href="${l.url}" target="_blank">${l.text || l.url}</a>`).join('')}</div>
+      </div></section>` : '';
+
+  // 多媒体
+  const media = (data.media || []).filter(m => m.url);
+  let mediaHtml = '';
+  if (media.length) {
+    const mediaCards = media.map(m => {
+      if (m.type === 'img') {
+        return `<div class="media-card"><img src="${m.url}" alt="${m.title||''}" loading="lazy">${m.title ? `<div class="media-body"><h3>${m.title}</h3></div>` : ''}</div>`;
+      } else if (m.type === 'video') {
+        return `<div class="media-card"><video src="${m.url}" controls preload="metadata">${m.title||'视频'}</video>${m.title ? `<div class="media-body"><h3>${m.title}</h3></div>` : ''}</div>`;
+      } else if (m.type === 'audio') {
+        return `<div class="media-card"><div class="media-body"><h3>${m.title||'音频'}</h3></div><audio src="${m.url}" controls preload="metadata"></audio></div>`;
+      } else {
+        return `<div class="media-card"><a href="${m.url}" target="_blank"><span class="link-icon">🔗</span>${m.title || m.url}</a></div>`;
+      }
+    }).join('');
+    mediaHtml = `<section><div class="container"><div class="section-title">作品展示</div><div class="media-grid">${mediaCards}</div></div></section>`;
+  }
+
+  document.getElementById('profile-view').innerHTML = `
+    <section id="hero"><div class="container">
+      ${avatarHtml}
+      <div class="hero-name">${data.name || '未命名'}</div>
+      ${data.tagline ? `<p class="hero-tagline">${data.tagline}</p>` : ''}
+      ${tags.length ? `<div class="hero-tags">${tagsHtml}</div>` : ''}
+    </div></section>
+    ${introHtml}
+    ${hobbiesSection}
+    ${contactHtml}
+    ${mediaHtml}
+    <footer>&copy; ${new Date().getFullYear()} ${data.name || ''} &middot; 由个人主页生成器创建</footer>`;
+}
+
+const hash = location.hash.slice(1);
+if (hash) {
+  const data = decode(hash);
+  if (data && data.name) {
+    document.title = data.name + '的个人主页';
+    render(data);
+  } else {
+    document.getElementById('error-view').style.display = '';
+  }
+} else {
+  document.getElementById('error-view').style.display = '';
+}
+</script>
+</body>
+</html>
